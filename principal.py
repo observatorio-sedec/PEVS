@@ -9,6 +9,8 @@ import time
 from Google import Create_Service
 from googleapiclient.http import MediaFileUpload
 import openpyxl
+from ajustar_planilha import ajustar_bordas, ajustar_colunas
+from openpyxl.styles import Font, Border, Side
 
 #TABELA
 tabela289 = 289
@@ -249,18 +251,24 @@ def gerando_dataframe(dados_limpos_142_nacional, dados_limpos_142_estadual, dado
     df142estadual = pd.DataFrame(dados_limpos_142_estadual)
     df142municipal = pd.DataFrame(dados_limpos_142_municipal)
     
-    
-
     df143nacional = pd.DataFrame(dados_limpos_143_nacional)
     df143estadual = pd.DataFrame(dados_limpos_143_estadual)
     df143municipal = pd.DataFrame(dados_limpos_143_municipal)
     
     df291nacional = pd.merge(df142nacional, df143nacional, on=['id', 'nome', 'produto', 'ano'], how='inner')
     df291nacional = df291nacional.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
+    df291nacional['Quantidade produzida na silvicultura'] = df291nacional['Quantidade produzida na silvicultura'].astype(float)
+    df291nacional['Valor da produção na silvicultura'] = df291nacional['Valor da produção na silvicultura'].astype(float)
+    
     df291estadual = pd.merge(df142estadual, df143estadual, on=['id', 'nome', 'produto',  'ano'], how='inner')
     df291estadual = df291estadual.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
+    df291estadual['Quantidade produzida na silvicultura'] = df291estadual['Quantidade produzida na silvicultura'].astype(float)
+    df291estadual['Valor da produção na silvicultura'] = df291estadual['Valor da produção na silvicultura'].astype(float)
+    
     df291municipal = pd.merge(df142municipal, df143municipal, on=['id', 'nome',  'produto',  'ano'], how='inner')
     df291municipal = df291municipal.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
+    df291municipal['Quantidade produzida na silvicultura'] = df291municipal['Quantidade produzida na silvicultura'].astype(float)
+    df291municipal['Valor da produção na silvicultura'] = df291municipal['Valor da produção na silvicultura'].astype(float)
 
     return df291nacional, df291estadual, df291municipal
 
@@ -269,6 +277,10 @@ def gerando_dataframe2(dados_limpos_6549_nacional, dados_limpos_6549_estadual, d
     df6549estadual =  pd.DataFrame(dados_limpos_6549_estadual)
     df6549municipal = pd.DataFrame(dados_limpos_6549_municipal)
 
+
+    df6549nacional['Área total existente em 31/12 dos efetivos da silvicultura'] = df6549nacional['Área total existente em 31/12 dos efetivos da silvicultura'].astype(float)
+    df6549estadual['Área total existente em 31/12 dos efetivos da silvicultura'] = df6549estadual['Área total existente em 31/12 dos efetivos da silvicultura'].astype(float)
+    df6549municipal['Área total existente em 31/12 dos efetivos da silvicultura'] = df6549municipal['Área total existente em 31/12 dos efetivos da silvicultura'].astype(float)
     return df6549nacional, df6549estadual, df6549municipal
 
 
@@ -294,6 +306,11 @@ def gerando_dataframe4(dados_limpos_144_nacional, dados_limpos_144_estadual, dad
     df289nacional = df289nacional.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
     df289estadual = df289estadual.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
     #df289municipal = pd.merge(df145municipal, df145municipal, on=['id', 'nome', 'produto', 'ano'], how='inner')
+    df289nacional['Quantidade produzida na extração vegetal'] = df289nacional['Quantidade produzida na extração vegetal'].astype(float)
+    df289nacional['Valor da produção na extração vegetal'] = df289nacional['Valor da produção na extração vegetal'].astype(float)
+    
+    df289estadual['Quantidade produzida na extração vegetal'] = df289estadual['Quantidade produzida na extração vegetal'].astype(float)
+    df289estadual['Valor da produção na extração vegetal'] = df289estadual['Valor da produção na extração vegetal'].astype(float)
     
     return df289nacional, df289estadual
 
@@ -305,6 +322,11 @@ df291nacional, df291estadual, df291municipal = gerando_dataframe(dados_limpos_14
 df291nacional.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_NACIONAL.xlsx', index=False)
 df291estadual.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_ESTADUAL.xlsx', index=False)
 df291municipal.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_MUNICIPAL.xlsx', index=False)
+
+df291nacional.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_291_NACIONAL.html', index=False)
+df291estadual.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_291_ESTADUAL.html', index=False)
+df291municipal.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_291_MUNICIPAL.html', index=False)
+
 #print(df291municipal)
 #print(df291nacional)
 #print(df291estadual)
@@ -314,6 +336,11 @@ df6549nacional, df6549estadual, df6549municipal = gerando_dataframe2(dados_limpo
 df6549nacional.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_NACIONAL.xlsx', index=False)
 df6549estadual.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_ESTADUAL.xlsx', index=False)
 df6549municipal.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_MUNICIPAL.xlsx', index=False)
+
+df6549nacional.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_5930_6549_NACIONAL.html', index=False)
+df6549estadual.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_5930_6549_ESTADUAL.html', index=False)
+df6549municipal.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_5930_6549_MUNICIPAL.html', index=False)
+
 #print(df6549nacional)
 
 df_produtos, df_especies = gerando_dataframe3(lista_produtos, lista_especies)
@@ -324,6 +351,9 @@ df289nacional, df289estadual = gerando_dataframe4(dados_limpos_144_nacional, dad
 df289nacional.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_NACIONAL.xlsx', index=False)
 df289estadual.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_ESTADUAL.xlsx', index=False)
 
+df289nacional.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_289_NACIONAL.html', index=False)
+df289estadual.to_html('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\CHATBOT\\Banco de dados Bot\\PEVS_289_ESTADUAL.html', index=False)
+
 #CARREGANDO AS PLANILHAS PEVS 291 E FAZENDO ALTERAÇÕIES NELAS
 wb_291_nacional = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_NACIONAL.xlsx")  
 wb_291_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_ESTADUAL.xlsx")  
@@ -333,26 +363,14 @@ ws_291_nacional = wb_291_nacional.active
 ws_291_estadual = wb_291_estadual.active
 ws_291_municipal = wb_291_municipal.active
 
-ws_291_nacional.column_dimensions['C'].width = 50
-ws_291_estadual.column_dimensions['C'].width = 50
-ws_291_municipal.column_dimensions['C'].width = 50
+lista_ws = [ws_291_nacional, ws_291_estadual, ws_291_municipal]
+lista_wb = [wb_291_nacional, wb_291_estadual, wb_291_municipal]
 
-colunas_pequenas = ['B', 'E', 'H' ]
-largura_desejada = 25
-
-for coluna in colunas_pequenas:
-    ws_291_nacional.column_dimensions[coluna].width = largura_desejada
-    ws_291_estadual.column_dimensions[coluna].width = largura_desejada
-    ws_291_municipal.column_dimensions[coluna].width = largura_desejada
-
-colunas_maiores = ['D', 'G']
-largura_maior = 36
-
-for coluna in colunas_maiores:
-    ws_291_nacional.column_dimensions[coluna].width = largura_maior
-    ws_291_estadual.column_dimensions[coluna].width = largura_maior
-    ws_291_municipal.column_dimensions[coluna].width = largura_maior
+for ws3, wb3 in zip(lista_ws, lista_wb):
+    ajustar_colunas(ws3)
+    ajustar_bordas(wb3)
     
+        
 # Salvar a planilha
 wb_291_nacional.save('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_NACIONAL.xlsx')
 wb_291_estadual.save('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_ESTADUAL.xlsx')
@@ -367,18 +385,11 @@ ws_5930_nacional = wb_5930_nacional.active
 ws_5930_estadual = wb_5930_estadual.active
 ws_5930_municipal = wb_5930_municipal.active
 
-colunas_para_ajustar = ['A','B','C', 'D','G']
-largura_desejada = 23
-
-for coluna in colunas_para_ajustar:
-    ws_5930_nacional.column_dimensions[coluna].width = largura_desejada
-    ws_5930_estadual.column_dimensions[coluna].width = largura_desejada
-    ws_5930_municipal.column_dimensions[coluna].width = largura_desejada
- 
-ws_5930_nacional.column_dimensions['E'].width = 50
-ws_5930_estadual.column_dimensions['E'].width = 50
-ws_5930_municipal.column_dimensions['E'].width = 50   
-
+lista_ws2 = [ws_5930_nacional, ws_5930_estadual, ws_5930_municipal]
+lista_wb2 = [wb_5930_nacional, wb_5930_estadual, wb_5930_municipal]
+for ws2, wb2 in zip(lista_ws2, lista_wb2):
+    ajustar_colunas(ws2)
+    ajustar_bordas(wb2)
 
 # Salvar a planilha
 wb_5930_nacional.save('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_NACIONAL.xlsx')
@@ -393,27 +404,11 @@ wb_289_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lu
 ws_289_nacional = wb_289_nacional.active
 ws_289_estadual = wb_289_estadual.active
 
-
-ws_289_nacional.column_dimensions['C'].width = 40
-ws_289_estadual.column_dimensions['C'].width = 40
-
-ws_289_nacional.column_dimensions['F'].width = 11
-ws_289_estadual.column_dimensions['F'].width = 11
-
-colunas_pequenas = ['B', 'E', 'H' ]
-largura_desejada = 20
-
-for coluna in colunas_pequenas:
-    ws_289_nacional.column_dimensions[coluna].width = largura_desejada
-    ws_289_estadual.column_dimensions[coluna].width = largura_desejada
-    
-
-colunas_maiores = ['D', 'G']
-largura_maior = 36
-
-for coluna in colunas_maiores:
-    ws_289_nacional.column_dimensions[coluna].width = largura_maior
-    ws_289_estadual.column_dimensions[coluna].width = largura_maior
+lista_ws3 = [ws_289_nacional, ws_289_estadual]
+lista_wb3 = [wb_289_nacional, wb_289_nacional]
+for ws, wb in zip(lista_ws3, lista_wb3):
+    ajustar_colunas(ws)
+    ajustar_bordas(wb)
     
 wb_289_nacional.save('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_NACIONAL.xlsx')
 wb_289_estadual.save('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_ESTADUAL.xlsx')
@@ -469,62 +464,25 @@ for aba in planilha_principal.sheetnames:
     if aba not in ["PEVS 291 NACIONAL", "PEVS 291 ESTADUAL", "PEVS 291 MUNICIPAL", "PEVS 5930 NACIONAL","PEVS 5930 ESTADUAL", "PEVS 5930 MUNICIPAL", "PEVS 289 NACIONAL", "PEVS 289 ESTADUAL"]:
         del planilha_principal[aba]
 
-aba_291_nacional.column_dimensions['C'].width = 50
-aba_291_estadual.column_dimensions['C'].width = 50
-aba_291_municipal.column_dimensions['C'].width = 50
-
-colunas_pequenas = ['B', 'E', 'H' ]
-largura_desejada = 25
-
-for coluna in colunas_pequenas:
-    aba_291_nacional.column_dimensions[coluna].width = largura_desejada
-    aba_291_estadual.column_dimensions[coluna].width = largura_desejada
-    aba_291_municipal.column_dimensions[coluna].width = largura_desejada
-
-colunas_maiores = ['D', 'G']
-largura_maior = 36
-
-for coluna in colunas_maiores:
-    aba_291_nacional.column_dimensions[coluna].width = largura_maior
-    aba_291_estadual.column_dimensions[coluna].width = largura_maior
-    aba_291_municipal.column_dimensions[coluna].width = largura_maior
-
-
-colunas_para_ajustar = ['A','B','C', 'D','G']
-largura_desejada = 23
-
-for coluna in colunas_para_ajustar:
-    aba_5930_nacional.column_dimensions[coluna].width = largura_desejada
-    aba_5930_estadual.column_dimensions[coluna].width = largura_desejada
-    aba_5930_municipal.column_dimensions[coluna].width = largura_desejada
- 
-aba_5930_nacional.column_dimensions['E'].width = 50
-aba_5930_estadual.column_dimensions['E'].width = 50
-aba_5930_municipal.column_dimensions['E'].width = 50   
-
-aba_289_nacional.column_dimensions['C'].width = 40
-aba_289_estadual.column_dimensions['C'].width = 40
-
-aba_289_nacional.column_dimensions['F'].width = 11
-aba_289_estadual.column_dimensions['F'].width = 11
-
-colunas_pequenas = ['B', 'E', 'H' ]
-largura_desejada = 20
-
-for coluna in colunas_pequenas:
-    aba_289_nacional.column_dimensions[coluna].width = largura_desejada
-    aba_289_estadual.column_dimensions[coluna].width = largura_desejada
+lista_abas = [aba_291_nacional, aba_291_estadual, aba_291_municipal, aba_5930_nacional, aba_5930_estadual, aba_5930_municipal, aba_289_nacional, aba_289_estadual]
+for abas in lista_abas:
+    ajustar_colunas(abas)
+    ajustar_colunas(abas)
     
-colunas_maiores = ['D', 'G']
-largura_maior = 36
-
-for coluna in colunas_maiores:
-    aba_289_nacional.column_dimensions[coluna].width = largura_maior
-    aba_289_estadual.column_dimensions[coluna].width = largura_maior
-
-
 planilha_principal.save("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS.xlsx")
 
+worksheet = planilha_principal.active
+df = pd.read_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\DADOS\\ANP\\ETANOL\\ETANOL ANP.xlsx')
+
+for sheet_name in planilha_principal.sheetnames:
+    worksheet = planilha_principal[sheet_name]
+    
+    for col_num in range(1, worksheet.max_column + 1):
+        cell = worksheet.cell(row=1, column=col_num)
+        cell.font = Font(bold=True)
+        cell.border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
+
+planilha_principal.save("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS.xlsx")
 
 #Faz autenticação do google drive para jogar os arquivos gerados
 CLIENT_SECRET_FILE = 'credencials.json'
