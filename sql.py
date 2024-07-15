@@ -5,40 +5,41 @@ from conexão import conexao
 def executar_sql():
     cur = conexao.cursor()
     
+    cur.execute('SET search_path TO pevs, public')
     # Verifica a existência das tabelas e retorna 1
 
     verificando_existencia_291_estadual = '''
     SELECT 1
     FROM information_schema.tables
-    WHERE table_type='BASE TABLE' AND table_name='pevs_291_estadual';
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_291_estadual';
     '''
     
     verificando_existencia_291_municipal = '''
     SELECT 1
     FROM information_schema.tables
-    WHERE table_type='BASE TABLE' AND table_name='pevs_291_municipal';
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_291_municipal';
     '''
     
     verificando_existencia_5930_estadual = '''
     SELECT 1
     FROM information_schema.tables
-    WHERE table_type='BASE TABLE' AND table_name='pevs_5930_6549_estadual';
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_5930_6549_estadual';
     '''
     
     verificando_existencia_5930_municipal = '''
     SELECT 1
     FROM information_schema.tables
-    WHERE table_type='BASE TABLE' AND table_name='pevs_5930_6549_municipal';
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_5930_6549_municipal';
     '''
     
     verificando_existencia_289_estadual = '''
     SELECT 1
     FROM information_schema.tables
-    WHERE table_type='BASE TABLE' AND table_name='pevs_289_estadual';
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_289_estadual';
     '''
     pevs_291_estadual = \
     '''
-    CREATE TABLE IF NOT EXISTS pevs_291_estadual (
+    CREATE TABLE IF NOT EXISTS pevs.pevs_291_estadual (
         id_pevs_291_estadual SERIAL PRIMARY KEY,
         id INTEGER NOT NULL,
         nome TEXT,
@@ -51,7 +52,7 @@ def executar_sql():
     '''
     pevs_291_municipal = \
     '''
-    CREATE TABLE IF NOT EXISTS pevs_291_municipal (
+    CREATE TABLE IF NOT EXISTS pevs.pevs_291_municipal (
         id_pevs_291_municipal SERIAL PRIMARY KEY ,
         id INTEGER NOT NULL,
         nome TEXT,
@@ -64,7 +65,7 @@ def executar_sql():
     '''
     pevs_5930_6549_estadual = \
     '''
-    CREATE TABLE IF NOT EXISTS pevs_5930_6549_estadual (
+    CREATE TABLE IF NOT EXISTS pevs.pevs_5930_6549_estadual (
         id_pevs_5930_6549_estadual SERIAL PRIMARY KEY ,
         id INTEGER NOT NULL,
         nome TEXT,
@@ -75,7 +76,7 @@ def executar_sql():
     '''
     pevs_5930_6549_municipal = \
     '''
-    CREATE TABLE IF NOT EXISTS pevs_5930_6549_municipal (
+    CREATE TABLE IF NOT EXISTS pevs.pevs_5930_6549_municipal (
         id_pevs_5930_6549_municipal SERIAL PRIMARY KEY,
         id INTEGER NOT NULL,
         nome TEXT,
@@ -87,7 +88,7 @@ def executar_sql():
     
     pevs_289_estadual = \
     '''
-    CREATE TABLE IF NOT EXISTS pevs_289_estadual (
+    CREATE TABLE IF NOT EXISTS pevs.pevs_289_estadual (
         id_pevs_289_estadual SERIAL PRIMARY KEY ,
         id INTEGER NOT NULL,
         nome TEXT,
@@ -122,7 +123,7 @@ def executar_sql():
     # Verifique se as tabelas existem e exclua, se necessário
     if resultado_291_estadual[0] == 1:
         dropando_tabela_291_estadual = '''
-        TRUNCATE TABLE pevs_291_estadual;
+        TRUNCATE TABLE pevs.pevs_291_estadual;
         '''
         cur.execute(dropando_tabela_291_estadual)
     else:
@@ -130,7 +131,7 @@ def executar_sql():
 
     if resultado_291_municipal[0] == 1:
         dropando_tabela_291_municipal = '''
-        TRUNCATE TABLE pevs_291_municipal;
+        TRUNCATE TABLE pevs.pevs_291_municipal;
         '''
         cur.execute(dropando_tabela_291_municipal)
     else:
@@ -138,7 +139,7 @@ def executar_sql():
 
     if resultado_5930_estadual[0] == 1:
         dropando_tabela_5930_estadual = '''
-        TRUNCATE TABLE pevs_5930_6549_estadual;
+        TRUNCATE TABLE pevs.pevs_5930_6549_estadual;
         '''
         cur.execute(dropando_tabela_5930_estadual)
     else:
@@ -146,14 +147,14 @@ def executar_sql():
     
     if resultado_5930_municipal[0] == 1:
         dropando_tabela_5930_municipal = '''
-        TRUNCATE TABLE pevs_5930_6549_municipal;
+        TRUNCATE TABLE pevs.pevs_5930_6549_municipal;
         '''
         cur.execute(dropando_tabela_5930_municipal)
     else:
         pass        
     if resultado_289_estadual[0] == 1:
         dropando_tabela_289_estadual = '''
-        TRUNCATE TABLE pevs_289_estadual;
+        TRUNCATE TABLE pevs.pevs_289_estadual;
         '''
         cur.execute(dropando_tabela_289_estadual)
     else:
@@ -162,7 +163,7 @@ def executar_sql():
     #INSERINDO DADOS
     inserindo_pevs_291_estadual = \
     '''
-    INSERT INTO pevs_291_estadual (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
+    INSERT INTO pevs.pevs_291_estadual (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
     VALUES(%s,%s,%s,%s,%s,%s,%s,%s) 
     '''
     try:
@@ -183,7 +184,7 @@ def executar_sql():
 
     inserindo_pevs_291_municipal = \
     '''
-    INSERT INTO pevs_291_municipal (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
+    INSERT INTO pevs.pevs_291_municipal (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
     VALUES(%s,%s,%s,%s,%s,%s,%s,%s) 
     '''
     try:
@@ -205,7 +206,7 @@ def executar_sql():
 
     inserindo_pevs_5930_6549_estadual = \
     '''
-    INSERT INTO pevs_5930_6549_estadual (id, nome, especie, area_total, unidade, ano)
+    INSERT INTO pevs.pevs_5930_6549_estadual (id, nome, especie, area_total, unidade, ano)
     VALUES(%s,%s,%s,%s,%s,%s) 
     '''
     try:
@@ -224,7 +225,7 @@ def executar_sql():
 
     inserindo_pevs_5930_6549_municipal = \
     '''
-    INSERT INTO pevs_5930_6549_municipal (id, nome, especie, area_total, unidade, ano)
+    INSERT INTO pevs.pevs_5930_6549_municipal (id, nome, especie, area_total, unidade, ano)
     VALUES(%s,%s,%s,%s,%s,%s) 
     '''
     try:
@@ -243,7 +244,7 @@ def executar_sql():
         
     inserindo_pevs_289_estadual = \
     '''
-    INSERT INTO pevs_289_estadual (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
+    INSERT INTO pevs.pevs_289_estadual (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
     VALUES(%s,%s,%s,%s,%s,%s,%s,%s) 
     '''
     try:

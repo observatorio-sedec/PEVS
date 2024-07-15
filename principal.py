@@ -22,18 +22,16 @@ tabela5930 = 5930
 api289estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/144|145?{estadual}&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
 #api289municipal =f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/144|145?{municipal}&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
 
-api291estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/142|143?{estadual}&classificacao=194[3455,33247,33248,33249,3456,33250,33251,33252,3457,3458,33253,33254,33255,3459,33256,33257,33258]'
-api291municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/142|143?{municipal}&classificacao=194[3455,33247,33248,33249,3456,33250,33251,33252,3457,3458,33253,33254,33255,3459,33256,33257,33258]'
+api291estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/142|143?{estadual}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
+api291municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/142|143?{municipal}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
 
 api5930estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/6549?{estadual}&classificacao=734[39326,39327,39328]'
 api5930municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/6549?{municipal}&classificacao=734[39326,39327,39328]' 
 
 nomes_produtos = [
-    "Lenha",
     "Lenha de eucalipto",
     "Lenha de pinus",
     "Lenha de outras espécies",
-    "Madeira em tora",
     "Madeira em tora para papel e celulose",
     "Madeira em tora de eucalipto para papel e celulose",
     "Madeira em tora de pinus para papel e celulose",
