@@ -1,42 +1,9 @@
 import psycopg2
-from principal import df291estadual, df291municipal, df6549estadual, df6549municipal, df289estadual
+from principal import df291estadual, df291municipal, df6549estadual, df6549municipal, df289estadual, df289municipal
 from conexão import conexao
 
 def executar_sql():
     cur = conexao.cursor()
-    
-    cur.execute('SET search_path TO pevs, public')
-    # Verifica a existência das tabelas e retorna 1
-
-    verificando_existencia_291_estadual = '''
-    SELECT 1
-    FROM information_schema.tables
-    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_291_estadual';
-    '''
-    
-    verificando_existencia_291_municipal = '''
-    SELECT 1
-    FROM information_schema.tables
-    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_291_municipal';
-    '''
-    
-    verificando_existencia_5930_estadual = '''
-    SELECT 1
-    FROM information_schema.tables
-    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_5930_6549_estadual';
-    '''
-    
-    verificando_existencia_5930_municipal = '''
-    SELECT 1
-    FROM information_schema.tables
-    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_5930_6549_municipal';
-    '''
-    
-    verificando_existencia_289_estadual = '''
-    SELECT 1
-    FROM information_schema.tables
-    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_289_estadual';
-    '''
     pevs_291_estadual = \
     '''
     CREATE TABLE IF NOT EXISTS pevs.pevs_291_estadual (
@@ -46,7 +13,7 @@ def executar_sql():
         produto TEXT,
         quantidade_producao INTEGER,
         unidade_quantidade TEXT, 
-        valor_producao INTEGER,
+        valor_producao NUMERIC,
         unidade_producao TEXT,
         ano DATE); 
     '''
@@ -59,7 +26,7 @@ def executar_sql():
         produto TEXT,
         quantidade_producao INTEGER,
         unidade_quantidade TEXT, 
-        valor_producao INTEGER,
+        valor_producao NUMERIC,
         unidade_producao TEXT,
         ano DATE); 
     '''
@@ -95,9 +62,60 @@ def executar_sql():
         produto TEXT,
         quantidade_producao INTEGER,
         unidade_quantidade TEXT, 
-        valor_producao INTEGER,
+        valor_producao NUMERIC,
         unidade_producao TEXT,
         ano DATE); 
+    '''
+    pevs_289_municipal = \
+    '''
+    CREATE TABLE IF NOT EXISTS pevs.pevs_289_municipal (
+        id_pevs_289_municipal SERIAL PRIMARY KEY ,
+        id INTEGER NOT NULL,
+        nome TEXT,
+        produto TEXT,
+        quantidade_producao INTEGER,
+        unidade_quantidade TEXT, 
+        valor_producao NUMERIC,
+        unidade_producao TEXT,
+        ano DATE); 
+    '''
+    
+    cur.execute('SET search_path TO pevs, public')
+    # Verifica a existência das tabelas e retorna 1
+
+    verificando_existencia_291_estadual = '''
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_291_estadual';
+    '''
+    
+    verificando_existencia_291_municipal = '''
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_291_municipal';
+    '''
+    
+    verificando_existencia_5930_estadual = '''
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_5930_6549_estadual';
+    '''
+    
+    verificando_existencia_5930_municipal = '''
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_5930_6549_municipal';
+    '''
+    
+    verificando_existencia_289_estadual = '''
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_289_estadual';
+    '''
+    verificando_existencia_289_municipal = '''
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema= 'pevs' AND table_type='BASE TABLE' AND table_name='pevs_289_municipal';
     '''
 
     cur.execute(pevs_291_estadual)
@@ -105,6 +123,7 @@ def executar_sql():
     cur.execute(pevs_5930_6549_estadual)
     cur.execute(pevs_5930_6549_municipal)
     cur.execute(pevs_289_estadual)
+    cur.execute(pevs_289_municipal)
 
     # Execute as consultas de verificação
     cur.execute(verificando_existencia_291_estadual)
@@ -119,6 +138,8 @@ def executar_sql():
     resultado_5930_municipal = cur.fetchone()
     cur.execute(verificando_existencia_289_estadual)
     resultado_289_estadual = cur.fetchone()
+    cur.execute(verificando_existencia_289_municipal)
+    resultado_289_municipal = cur.fetchone()
 
     # Verifique se as tabelas existem e exclua, se necessário
     if resultado_291_estadual[0] == 1:
@@ -157,6 +178,14 @@ def executar_sql():
         TRUNCATE TABLE pevs.pevs_289_estadual;
         '''
         cur.execute(dropando_tabela_289_estadual)
+    else:
+        pass
+    
+    if resultado_289_municipal[0] == 1:
+        dropando_tabela_289_municipal = '''
+        TRUNCATE TABLE pevs.pevs_289_municipal;
+        '''
+        cur.execute(dropando_tabela_289_municipal)
     else:
         pass
 
@@ -260,6 +289,27 @@ def executar_sql():
                 i['ano']
             )
             cur.execute(inserindo_pevs_289_estadual, dados)
+    except psycopg2.Error as e:
+        print(f"Erro ao inserir dados estaduais: {e}")
+        
+    inserindo_pevs_289_municipal = \
+    '''
+    INSERT INTO pevs.pevs_289_municipal (id, nome, produto, quantidade_producao, unidade_quantidade, valor_producao, unidade_producao, ano)
+    VALUES(%s,%s,%s,%s,%s,%s,%s,%s) 
+    '''
+    try:
+        for idx, i in df289municipal.iterrows():
+            dados = (
+                i['id'], 
+                i['nome'], 
+                i['produto'], 
+                i['Quantidade produzida na extração vegetal'], 
+                i['unidade_quantidade'], 
+                i['Valor da produção na extração vegetal'], 
+                i['unidade_producao'],
+                i['ano']
+            )
+            cur.execute(inserindo_pevs_289_municipal, dados)
     except psycopg2.Error as e:
         print(f"Erro ao inserir dados estaduais: {e}")
 

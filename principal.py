@@ -1,3 +1,4 @@
+import datetime
 import pandas as pd
 import requests as rq 
 import numpy as np
@@ -18,15 +19,15 @@ tabela5930 = 5930
 
 
 #VARIAVEL
+api289estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/2014|2015|2016|2017|2018|2019|2020|2021|2022|2023/variaveis/144|145?{estadual}&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
 
-api289estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/144|145?{estadual}&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
-#api289municipal =f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/144|145?{municipal}&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
+api291estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022|2023/variaveis/142|143?{estadual}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
+api291municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022|2023/variaveis/142|143?{municipal}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
 
-api291estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/142|143?{estadual}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
-api291municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/142|143?{municipal}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
+api5930estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022|2023/variaveis/6549?{estadual}&classificacao=734[39326,39327,39328]'
+api5930municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022|2023/variaveis/6549?localidades=N6[5100102,5100201,5100250,5100300,5100409,5100508,5100607,5101001,5101209,5101258,5101308,5101407,5101704,5101803,5101852,5101902,5102504,5102603,5102637,5102678,5102686,5102694,5102702,5102793,5103007,5103056,5103106,5103205,5103304,5103353,5103379,5103403,5103437,5103452,5103502,5103601,5103700,5103809,5103858,5103908,5103957,5104104,5104203,5104500,5104526,5104542,5104559,5104609,5104807,5104906,5105002,5105101,5105150,5105176,5105200,5105234,5105259,5105507,5105580,5105606,5105622,5105903,5106000,5106109,5106158,5106182,5106190,5106208,5106216,5106224,5106232,5106240,5106257,5106265,5106273,5106281,5106299,5106307,5106372,5106422,5106455,5106653,5106703,5106752,5106778,5106802,5106828,5106851,5107008,5107040,5107065,5107107,5107156,5107180,5107198,5107206,5107248,5107263,5107297,5107305,5107354,5107404,5107602,5107701,5107743,5107750,5107768,5107776,5107792,5107800,5107859,5107875,5107883,5107909,5107925,5107941,5107958,5108006,5108055,5108105,5108204,5108352,5108402,5108501,5108600,5108808,5108857,5108907,5108956]&classificacao=734[39326,39327,39328]' 
 
-api5930estadual = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/6549?{estadual}&classificacao=734[39326,39327,39328]'
-api5930municipal = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/2013|2014|2015|2016|2017|2018|2019|2020|2021|2022/variaveis/6549?{municipal}&classificacao=734[39326,39327,39328]' 
+lista_cod_produto = [3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]
 
 nomes_produtos = [
     "Lenha de eucalipto",
@@ -64,22 +65,25 @@ def requisitando_dados(api):
     
 def extrair_dados(api, tabela_id):
     dados_brutos = requisitando_dados(api)
-    
-    if dados_brutos:
-        if tabela_id == tabela291:
-            variavel142 = dados_brutos[0]
-            variavel143 = dados_brutos[1]
-            return variavel142, variavel143
+
+    variaveis_por_tabela = {
+        289: ['variavel_144', 'variavel_145'],
+        291: ['variavel_142', 'variavel_143'],
+        5930: ['variavel_6549']
+    }
+
+    if tabela_id in variaveis_por_tabela:
+        variaveis = variaveis_por_tabela[tabela_id]
         
-        elif tabela_id == tabela5930:
-            variavel6549 = dados_brutos[0]
-            return variavel6549
-        elif tabela_id == tabela289:
-            variavel144 = dados_brutos[0]
-            variavel145 = dados_brutos[1]
-            return variavel144, variavel145
-    else:
-        pass
+        if dados_brutos:
+            resultado = [dados_brutos[i] if i < len(dados_brutos) else None for i in range(len(variaveis))]
+        else:
+            resultado = [None] * len(variaveis)
+        
+   
+        return resultado[0] if len(variaveis) == 1 else tuple(resultado)
+
+    return None
 
 def tratando_tabela291(variavel142, variavel143):
     dados_limpos_142 = []
@@ -125,13 +129,8 @@ def tratando_tabela291(variavel142, variavel143):
                             else:
                                 dados_limpos_143.append(dict)
 
-                            dict2 = {
-                                'id_produto': id_produto,
-                                'nome_produto': nome_produto
-                            }
-                            lista_produto.append(dict2)
 
-    return dados_limpos_142, dados_limpos_143, lista_produto
+    return dados_limpos_142, dados_limpos_143
 
 def tratando_tabela5930(variavel6549):
     dados_limpos_6549 = []
@@ -170,13 +169,8 @@ def tratando_tabela5930(variavel6549):
                         }
                         dados_limpos_6549.append(dict)
 
-                        dict2 = {
-                                'id_especie': id_especie,
-                                'nome_especie': nome_especie
-                        }
-                        lista_especies.append(dict2)
 
-    return dados_limpos_6549, lista_especies
+    return dados_limpos_6549
 
 def tratando_tabela289(variavel144, variavel145):
     dados_limpos_144 = []
@@ -249,8 +243,66 @@ def executando_funcoes():
 
     return dados_limpos_142_estadual, dados_limpos_142_municipal, dados_limpos_143_estadual, dados_limpos_143_municipal,  \
         dados_limpos_6549_estadual, dados_limpos_6549_municipal, lista_produtos, lista_especies, dados_limpos_144_estadual, dados_limpos_145_estadual
+        
+ano_atual = datetime.datetime.now().year
+def executando(tabela, tipo):
+    lista_dados_144 = []
+    lista_dados_145 = []
+    lista_dados_142 = []
+    lista_dados_143 = [] 
+    lista_dados_6549 = []
+    for ano in range(2014, ano_atual):
+        if tabela == 289:
+            if tipo == 'estadual':
+                api =  f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/{ano}/variaveis/144|145?{estadual}&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
+            else:
+                api = f'https://servicodados.ibge.gov.br/api/v3/agregados/289/periodos/{ano}/variaveis/144|145?localidades=N6[5100102,5100201,5100250,5100300,5100359,5100409,5100508,5100607,5100805,5101001,5101209,5101258,5101308,5101407,5101605,5101704,5101803,5101852,5101902,5102504,5102603,5102637,5102678,5102686,5102694,5102702,5102793,5102850,5103007,5103056,5103106,5103205,5103254,5103304,5103353,5103361,5103379,5103403,5103437,5103452,5103502,5103601,5103700,5103809,5103858,5103908,5103957,5104104,5104203,5104500,5104526,5104542,5104559,5104609,5104807,5104906,5105002,5105101,5105150,5105176,5105200,5105234,5105259,5105309,5105507,5105580,5105606,5105622,5105903,5106000,5106109,5106158,5106174,5106182,5106190,5106208,5106216,5106224,5106232,5106240,5106257,5106265,5106273,5106281,5106299,5106307,5106315,5106372,5106422,5106455,5106505,5106653,5106703,5106752,5106778,5106802,5106828,5106851,5107008,5107040,5107065,5107107,5107156,5107180,5107198,5107206,5107248,5107263,5107297,5107305,5107354,5107404,5107578,5107602,5107701,5107743,5107750,5107768,5107776,5107792,5107800,5107859,5107875,5107883,5107909,5107925,5107941,5107958,5108006,5108055,5108105,5108204,5108303,5108352,5108402,5108501,5108600,5108808,5108857,5108907,5108956]&classificacao=193[3402,3405,3408,39409,3411,3412,3416,3418,3433,3434,3435,3438,3439,3440,3444]'
+            variavel_144, variavel_145 = extrair_dados(api, tabela)
+            if variavel_144 == None and variavel_145 == None:
+                break
+            else:
+                novos_dados_144, novos_dados_145 = tratando_tabela289(variavel_144, variavel_145)
+                lista_dados_144.extend(novos_dados_144)
+                lista_dados_145.extend(novos_dados_145)
+        
+        elif tabela == 291:
+            if tipo == 'estadual':
+                api = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/{ano}/variaveis/142|143?{estadual}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
+            else:
+                api = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela291}/periodos/{ano}/variaveis/142|143?{municipal}&classificacao=194[33247,33248,33249,33250,33251,33252,3458,33253,33254,33255,33256,33257,33258]'
+            variavel_142, variavel_143 = extrair_dados(api, tabela)
+            if variavel_142 == None and variavel_143 == None:
+                break
+            else:
+                novos_dados_142, novos_dados_143 = tratando_tabela291(variavel_142, variavel_143)
+                lista_dados_142.extend(novos_dados_142)
+                lista_dados_143.extend(novos_dados_143)
 
-def gerando_dataframe(dados_limpos_142_estadual, dados_limpos_142_municipal,dados_limpos_143_estadual, dados_limpos_143_municipal):
+        elif tabela == 5930:
+            if tipo == 'estadual':
+                api = f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/{ano}/variaveis/6549?{estadual}&classificacao=734[39326,39327,39328]'
+            else:
+                api= f'https://servicodados.ibge.gov.br/api/v3/agregados/{tabela5930}/periodos/{ano}/variaveis/6549?localidades=N6[5100102,5100201,5100250,5100300,5100409,5100508,5100607,5101001,5101209,5101258,5101308,5101407,5101704,5101803,5101852,5101902,5102504,5102603,5102637,5102678,5102686,5102694,5102702,5102793,5103007,5103056,5103106,5103205,5103304,5103353,5103379,5103403,5103437,5103452,5103502,5103601,5103700,5103809,5103858,5103908,5103957,5104104,5104203,5104500,5104526,5104542,5104559,5104609,5104807,5104906,5105002,5105101,5105150,5105176,5105200,5105234,5105259,5105507,5105580,5105606,5105622,5105903,5106000,5106109,5106158,5106182,5106190,5106208,5106216,5106224,5106232,5106240,5106257,5106265,5106273,5106281,5106299,5106307,5106372,5106422,5106455,5106653,5106703,5106752,5106778,5106802,5106828,5106851,5107008,5107040,5107065,5107107,5107156,5107180,5107198,5107206,5107248,5107263,5107297,5107305,5107354,5107404,5107602,5107701,5107743,5107750,5107768,5107776,5107792,5107800,5107859,5107875,5107883,5107909,5107925,5107941,5107958,5108006,5108055,5108105,5108204,5108352,5108402,5108501,5108600,5108808,5108857,5108907,5108956]&classificacao=734[39326,39327,39328]' 
+                
+            variavel_6549 = extrair_dados(api, tabela)
+            
+            if variavel_6549 == None:
+                break
+            else:
+                novos_dados_6549 = tratando_tabela5930(variavel_6549)
+                lista_dados_6549.extend(novos_dados_6549)
+
+    if tabela == 289:
+        return  lista_dados_144, lista_dados_145
+    elif tabela == 291:
+        return  lista_dados_142, lista_dados_143
+    elif tabela == 5930:
+        return  lista_dados_6549
+    else:
+        return 'dados não existentes'
+
+
+def gerando_dataframe_291(dados_limpos_142_estadual, dados_limpos_142_municipal, dados_limpos_143_estadual, dados_limpos_143_municipal):
     df142estadual = pd.DataFrame(dados_limpos_142_estadual)
     df142municipal = pd.DataFrame(dados_limpos_142_municipal)
     
@@ -263,20 +315,21 @@ def gerando_dataframe(dados_limpos_142_estadual, dados_limpos_142_municipal,dado
     df291estadual = df291estadual.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
     df291estadual['Quantidade produzida na silvicultura'] = df291estadual['Quantidade produzida na silvicultura'].astype(float)
     df291estadual['Valor da produção na silvicultura'] = df291estadual['Valor da produção na silvicultura'].astype(float)
+    df291estadual['Valor da produção na silvicultura'] = df291estadual['Valor da produção na silvicultura'] * 1000
     
     df291estadual['unidade_quantidade'] = df291estadual['produto'].apply(lambda x: 'metros cubicos' if x in nomes_produtos else 'toneladas')
 
-    
     
     df291municipal = pd.merge(df142municipal, df143municipal, on=['id', 'nome',  'produto',  'ano'], how='inner')
     df291municipal = df291municipal.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
     df291municipal['Quantidade produzida na silvicultura'] = df291municipal['Quantidade produzida na silvicultura'].astype(float)
     df291municipal['Valor da produção na silvicultura'] = df291municipal['Valor da produção na silvicultura'].astype(float)
+    df291municipal['Valor da produção na silvicultura'] = df291municipal['Valor da produção na silvicultura'] * 1000
     df291municipal['unidade_quantidade'] = df291municipal['produto'].apply(lambda x: 'metros cubicos' if x in nomes_produtos else 'toneladas')
 
     return df291estadual, df291municipal
 
-def gerando_dataframe2(dados_limpos_6549_estadual, dados_limpos_6549_municipal):
+def gerando_dataframe_5930(dados_limpos_6549_estadual, dados_limpos_6549_municipal):
     df6549estadual =  pd.DataFrame(dados_limpos_6549_estadual)
     df6549municipal = pd.DataFrame(dados_limpos_6549_municipal)
 
@@ -285,53 +338,59 @@ def gerando_dataframe2(dados_limpos_6549_estadual, dados_limpos_6549_municipal):
     df6549municipal['Área total existente em 31/12 dos efetivos da silvicultura'] = df6549municipal['Área total existente em 31/12 dos efetivos da silvicultura'].astype(float)
     return df6549estadual, df6549municipal
 
-def gerando_dataframe3(lista_produtos, lista_especies):
-    df_produtos =  pd.DataFrame(lista_produtos)
-    df_produtos = df_produtos.drop_duplicates()
-    df_especies =  pd.DataFrame(lista_especies)
-    df_especies = df_especies.drop_duplicates()
 
-    return df_produtos, df_especies
-
-def gerando_dataframe4(dados_limpos_144_estadual, dados_limpos_145_estadual):
+def gerando_dataframe289(dados_limpos_144_estadual, dados_limpos_145_estadual, dados_limpos_144_municipal, dados_limpos_145_municipal):
     df144estadual = pd.DataFrame(dados_limpos_144_estadual)
-    #df144municipal = pd.DataFrame(dados_limpos_144_municipal)
+    df144municipal = pd.DataFrame(dados_limpos_144_municipal)
     
     df145estadual = pd.DataFrame(dados_limpos_145_estadual)
-    #df145municipal = pd.DataFrame(dados_limpos_145_municipal)
+    df145municipal = pd.DataFrame(dados_limpos_145_municipal)
     
     df289estadual = pd.merge(df144estadual, df145estadual, on=['id', 'nome', 'produto', 'ano'], how='inner')
+    df289municipal = pd.merge(df144municipal, df145municipal, on=['id', 'nome', 'produto', 'ano'], how='inner')
     
     df289estadual = df289estadual.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
-    #df289municipal = pd.merge(df145municipal, df145municipal, on=['id', 'nome', 'produto', 'ano'], how='inner')
+    df289municipal = df289municipal.rename(columns={"unidade_x": "unidade_quantidade", "unidade_y": "unidade_producao"})
     
+    df289estadual.loc[(df289estadual['produto'].isin(['Lenha', 'Madeira em tora'])) & (df289estadual['unidade_quantidade'] == 'Toneladas'),'unidade_quantidade'] = 'Metros Cúbicos'
+    df289municipal.loc[(df289municipal['produto'].isin(['Pequi'])) & (df289municipal['unidade_quantidade'] == ''),'unidade_quantidade'] = 'Toneladas'
+
     df289estadual['Quantidade produzida na extração vegetal'] = df289estadual['Quantidade produzida na extração vegetal'].astype(float)
     df289estadual['Valor da produção na extração vegetal'] = df289estadual['Valor da produção na extração vegetal'].astype(float)
+    df289estadual['Valor da produção na extração vegetal'] = df289estadual['Valor da produção na extração vegetal'] * 1000
     
-    return df289estadual
+    df289municipal['Quantidade produzida na extração vegetal'] = df289municipal['Quantidade produzida na extração vegetal'].astype(float)
+    df289municipal['Valor da produção na extração vegetal'] = df289municipal['Valor da produção na extração vegetal'].astype(float)
+    df289municipal['Valor da produção na extração vegetal'] = df289municipal['Valor da produção na extração vegetal'] * 1000
+    print(df289estadual)
+    print(df289municipal)
+    
+    return df289estadual, df289municipal
 
-#PEVS 291 142/143 (NACIONAL, ESTADUAL E MUNICIPAL)
-dados_limpos_142_estadual, dados_limpos_142_municipal, dados_limpos_143_estadual, dados_limpos_143_municipal, \
-    dados_limpos_6549_estadual, dados_limpos_6549_municipal, lista_produtos, lista_especies, dados_limpos_144_estadual, dados_limpos_145_estadual = executando_funcoes()
+#PEVS (ESTADUAL E MUNICIPAL)
+dados_limpos_144_estadual, dados_limpos_145_estadual  = executando(289, 'estadual')
+dados_limpos_144_municipal, dados_limpos_145_municipal  = executando(289, 'municipal')
 
-df291estadual, df291municipal = gerando_dataframe(dados_limpos_142_estadual, dados_limpos_142_municipal, dados_limpos_143_estadual, dados_limpos_143_municipal)
+dados_limpos_142_estadual, dados_limpos_143_estadual  = executando(291, 'estadual')
+dados_limpos_142_municipal, dados_limpos_143_municipal  = executando(291, 'municipal')
 
+dados_limpos_6549_estadual = executando(5930, 'estadual')
+dados_limpos_6549_municipal = executando(5930, 'municipal')
+
+df289estadual, df289municipal = gerando_dataframe289(dados_limpos_144_estadual, dados_limpos_145_estadual, dados_limpos_144_municipal, dados_limpos_145_municipal)
+df291estadual, df291municipal = gerando_dataframe_291(dados_limpos_142_estadual, dados_limpos_142_municipal, dados_limpos_143_estadual, dados_limpos_143_municipal)
+df6549estadual, df6549municipal = gerando_dataframe_5930(dados_limpos_6549_estadual, dados_limpos_6549_municipal)
+
+#PLANILHAS TRATAMENTOS
 df291estadual.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_ESTADUAL.xlsx', index=False)
 df291municipal.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_MUNICIPAL.xlsx', index=False)
 
-#PEVS 5930 6549 (NACIONAL, ESTADUAL E MUNICIPAL)
-df6549estadual, df6549municipal = gerando_dataframe2(dados_limpos_6549_estadual, dados_limpos_6549_municipal)
 df6549estadual.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_ESTADUAL.xlsx', index=False)
 df6549municipal.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_MUNICIPAL.xlsx', index=False)
 
-df_produtos, df_especies = gerando_dataframe3(lista_produtos, lista_especies)
-df_produtos.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_lista_produtos.xlsx', index=False)
-df_especies.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_lista_especies.xlsx', index=False)
-
-df289estadual = gerando_dataframe4(dados_limpos_144_estadual, dados_limpos_145_estadual)
+df289municipal.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_MUNICIPAL.xlsx', index=False)
 df289estadual.to_excel('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_ESTADUAL.xlsx', index=False)
 
-#CARREGANDO AS PLANILHAS PEVS 291 E FAZENDO ALTERAÇÕIES NELAS
 wb_291_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_ESTADUAL.xlsx")  
 wb_291_municipal = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_MUNICIPAL.xlsx")  
 
@@ -371,7 +430,6 @@ wb_5930_municipal.save('C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquiv
 #CARREGANDO AS PLANILHAS PEVS 289 E FAZENDO ALTERAÇÕIES NELAS
 wb_289_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_ESTADUAL.xlsx")  
  
-
 ws_289_estadual = wb_289_estadual.active
 
 lista_ws3 = [ws_289_estadual]
@@ -389,18 +447,17 @@ wb_291_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lu
 wb_291_municipal = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_291_MUNICIPAL.xlsx")  
 wb_5930_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_ESTADUAL.xlsx")  
 wb_5930_municipal = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_5930_6549_MUNICIPAL.xlsx")  
-wb_289_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_ESTADUAL.xlsx")  
-
+wb_289_estadual = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_ESTADUAL.xlsx")
+wb_289_municipal = openpyxl.load_workbook("C:\\Users\\LucasFreitas\\Documents\\Lucas Freitas Arquivos\\DATAHUB\\TABELAS\\TABELAS EM CSV\\PEVS_289_MUNICIPAL.xlsx")
 
 aba_291_estadual = planilha_principal.create_sheet("PEVS 291 ESTADUAL")
 aba_291_municipal = planilha_principal.create_sheet("PEVS 291 MUNICIPAL")
-
 aba_5930_estadual = planilha_principal.create_sheet("PEVS 5930 ESTADUAL")
 aba_5930_municipal = planilha_principal.create_sheet("PEVS 5930 MUNICIPAL")
 aba_289_estadual = planilha_principal.create_sheet("PEVS 289 ESTADUAL")
+aba_289_municipal = planilha_principal.create_sheet("PEVS 289 MUNICIPAL")
 
 # Copiar os dados da primeira planilha para a nova planilha
-
 for linha in wb_291_estadual.active.iter_rows(values_only=True):
     aba_291_estadual.append(linha)
 
@@ -415,12 +472,15 @@ for linha in wb_5930_municipal.active.iter_rows(values_only=True):
 
 for linha in wb_289_estadual.active.iter_rows(values_only=True):
     aba_289_estadual.append(linha)
+    
+for linha in wb_289_municipal.active.iter_rows(values_only=True):
+    aba_289_municipal.append(linha)
 
 for aba in planilha_principal.sheetnames:
-    if aba not in ["PEVS 291 ESTADUAL", "PEVS 291 MUNICIPAL","PEVS 5930 ESTADUAL", "PEVS 5930 MUNICIPAL", "PEVS 289 ESTADUAL"]:
+    if aba not in ["PEVS 291 ESTADUAL", "PEVS 291 MUNICIPAL","PEVS 5930 ESTADUAL", "PEVS 5930 MUNICIPAL", "PEVS 289 ESTADUAL", "PEVS 289 MUNICIPAL"]:
         del planilha_principal[aba]
 
-lista_abas = [aba_291_estadual, aba_291_municipal, aba_5930_estadual, aba_5930_municipal, aba_289_estadual]
+lista_abas = [aba_291_estadual, aba_291_municipal, aba_5930_estadual, aba_5930_municipal, aba_289_estadual, aba_289_municipal]
 for abas in lista_abas:
     ajustar_colunas(abas)
     ajustar_colunas(abas)
