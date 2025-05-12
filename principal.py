@@ -362,8 +362,6 @@ def gerando_dataframe289(dados_limpos_144_estadual, dados_limpos_145_estadual, d
     df289municipal['Quantidade produzida na extração vegetal'] = df289municipal['Quantidade produzida na extração vegetal'].astype(float)
     df289municipal['Valor da produção na extração vegetal'] = df289municipal['Valor da produção na extração vegetal'].astype(float)
     df289municipal['Valor da produção na extração vegetal'] = df289municipal['Valor da produção na extração vegetal'] * 1000
-    print(df289estadual)
-    print(df289municipal)
     
     return df289estadual, df289municipal
 
