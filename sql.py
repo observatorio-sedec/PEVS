@@ -1,6 +1,6 @@
 import psycopg2
 from principal import df291estadual, df291municipal, df6549estadual, df6549municipal, df289estadual, df289municipal
-from conexão import conexao
+from conexao import conexao
 
 def executar_sql():
     cur = conexao.cursor()
