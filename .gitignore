@@ -3,3 +3,4 @@ credencials.json
 __pycache__/
 Drive.py
 .env
+.env.prod
